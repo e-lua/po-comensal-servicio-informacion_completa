@@ -25,7 +25,7 @@ func (cr *registerFromCS001) RegisterBasicData(c echo.Context) error {
 	}
 
 	//Validamos los valores enviados
-	if comensal.Phone < 999999 && len(comensal.Password) < 6 && len(comensal.Name) < 1 && len(comensal.LastName) < 1 {
+	if comensal.Phone < 999999 && len(comensal.Name) < 1 && len(comensal.LastName) < 1 {
 		results := Response_WithString{Error: true, DataError: "El valor ingresado no cumple con la regla de negocio", Data: ""}
 		return c.JSON(400, results)
 	}

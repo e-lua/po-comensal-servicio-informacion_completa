@@ -28,5 +28,5 @@ func RegisterBasicData_Service(input_comensal models.Pg_Comensal) (int, bool, st
 		return 500, true, "Error en el servidor interno al agregar la información del comensal comensal, detalle: " + error_add.Error(), ""
 	}
 
-	return 200, false, "Información básica actualizada correctamente", ""
+	return 200, false, "", "Información básica actualizada correctamente"
 }
