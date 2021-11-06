@@ -9,7 +9,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/rs/cors"
 
-	register "github.com/Aphofisis/po-comensal-servicio-informacion_completa/services/flujo_de_sesion/registro"
+	register "github.com/Aphofisis/po-comensal-servicio-informacion_completa/services/flujo_de_informacion/registro_basico_de_CS001"
 )
 
 func Manejadores() {
@@ -25,7 +25,7 @@ func Manejadores() {
 
 	//V1 TO ENTITY-CODE
 	router_comensal_v1 := version_1.Group("/comensal/basicdata")
-	router_comensal_v1.POST("", register.RegisterRouter.RegisterComensal)
+	router_comensal_v1.PUT("", register.RegisterFrom_CS001.RegisterBasicData)
 
 	//Abrimos el puerto
 	PORT := os.Getenv("PORT")
