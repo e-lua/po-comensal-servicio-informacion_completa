@@ -12,10 +12,7 @@ import (
 func RegisterBasicData_Service(input_comensal models.Pg_Comensal) (int, bool, string, string) {
 
 	//Validamos si esta registrado en el modelo Comensal
-	idcomensal_founded, err_find := comensal_repository.Pg_Find_By_Id(input_comensal.Phone)
-	if err_find != nil {
-		return 500, true, "Error en el servidor interno al intentar buscar el comensal, detalle: " + err_find.Error(), ""
-	}
+	idcomensal_founded, _ := comensal_repository.Pg_Find_By_Id(input_comensal.Phone)
 
 	if idcomensal_founded > 0 {
 		error_update := comensal_repository.Pg_Update_BasicData(input_comensal)
