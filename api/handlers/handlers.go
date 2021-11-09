@@ -56,20 +56,21 @@ func Consumer() {
 		log.Fatal(err_consume)
 	}
 
-	//noStop := make(chan bool)
+	noStop := make(chan bool)
 
-	for delivery := range chDelivery {
+	go func() {
+		for delivery := range chDelivery {
 
-		//DESERIALIZADORA
-		var comensal_dese models.Deserialized
-		buf := bytes.NewBuffer(delivery.Body)
-		decoder := json.NewDecoder(buf)
-		err_decode := decoder.Decode(&comensal_dese)
-		if err_decode != nil {
-			log.Fatal(err_decode)
+			//DESERIALIZADORA
+			var comensal_dese models.Deserialized
+			buf := bytes.NewBuffer(delivery.Body)
+			decoder := json.NewDecoder(buf)
+			err_decode := decoder.Decode(&comensal_dese)
+			if err_decode != nil {
+				log.Fatal(err_decode)
+			}
+			register.RegisterBasicData_Service(comensal_dese)
 		}
-		register.RegisterBasicData_Service(comensal_dese)
-	}
-
-	//<-noStop
+	}()
+	<-noStop
 }
