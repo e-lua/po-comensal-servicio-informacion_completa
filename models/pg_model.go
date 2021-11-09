@@ -17,3 +17,10 @@ type Pg_Comensal struct {
 	DeletedDate    time.Time `json:"deletedDate"`
 	OrdersRejected int       `json:"orderesRejected"`
 }
+
+type Deserialized struct {
+	IdCountry   int       `json:"country"`
+	Name        string    `json:"name"`
+	LastName    string    `json:"lastName"`
+	UpdatedDate time.Time `json:"updateDate"`
+}
