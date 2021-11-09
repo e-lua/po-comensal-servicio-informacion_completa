@@ -28,7 +28,7 @@ func RegisterBasicData_Service(input_comensal models.Deserialized) error {
 
 	comensal.IdCountry = input_comensal.IdCountry
 	comensal.Name = input_comensal.Name
-	comensal.LastName = comensal.LastName
+	comensal.LastName = input_comensal.LastName
 	comensal.CreatedDate = input_comensal.UpdatedDate
 	comensal.UpdatedDate = input_comensal.UpdatedDate
 
