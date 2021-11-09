@@ -19,8 +19,12 @@ type Pg_Comensal struct {
 }
 
 type Deserialized struct {
+	IdComensal  int       `json:"id"`
 	IdCountry   int       `json:"country"`
+	CodeRedis   int       `json:"code"`
 	Name        string    `json:"name"`
 	LastName    string    `json:"lastName"`
+	Phone       int       `json:"phone"`
+	Password    string    `json:"password"`
 	UpdatedDate time.Time `json:"updateDate"`
 }
