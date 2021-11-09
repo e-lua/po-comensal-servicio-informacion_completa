@@ -9,6 +9,6 @@ func main() {
 	//HANDLER
 	handler.Manejadores()
 
-	handler.Consumer()
+	go handler.Consumer()
 
 }
