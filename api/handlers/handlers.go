@@ -49,8 +49,6 @@ func Consumer() {
 		log.Fatal(error_conection)
 	}
 
-	defer ch.Close()
-
 	chDelivery, err_consume := ch.Consume("comensal/basicdata", "", true, false, false, false, nil)
 	if err_consume != nil {
 		log.Fatal(err_consume)
