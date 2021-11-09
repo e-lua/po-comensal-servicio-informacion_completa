@@ -49,7 +49,7 @@ func Consumer() {
 		log.Fatal(error_conection)
 	}
 
-	chDelivery, err_consume := ch.Consume("comensal/basicdata", "", true, false, false, false, nil)
+	chDelivery, err_consume := ch.Consume("comensal/basicdata", "comensal/basicdata", true, false, false, false, nil)
 	if err_consume != nil {
 		log.Fatal(err_consume)
 	}
