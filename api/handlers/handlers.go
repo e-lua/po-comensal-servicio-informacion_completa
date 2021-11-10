@@ -1,18 +1,15 @@
 package api
 
 import (
-	"bytes"
-	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
 
+	models "github.com/Aphofisis/po-comensal-servicio-informacion_completa/models"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/rs/cors"
-
-	"github.com/Aphofisis/po-comensal-servicio-informacion_completa/models"
-	register "github.com/Aphofisis/po-comensal-servicio-informacion_completa/services/flujo_de_informacion/registro_basico_de_CS001"
 )
 
 func Manejadores() {
@@ -43,13 +40,15 @@ func index(c echo.Context) error {
 }
 
 func Consumer() {
-	//MODELS
+
 	ch, error_conection := models.MqttCN.Channel()
 	if error_conection != nil {
 		log.Fatal(error_conection)
 	}
 
-	chDelivery, err_consume := ch.Consume("comensal/basicdata", "comensal/basicdata", true, false, false, false, nil)
+	defer ch.Close()
+
+	msgs, err_consume := ch.Consume("comensal/basicdata", "", true, false, false, false, nil)
 	if err_consume != nil {
 		log.Fatal(err_consume)
 	}
@@ -57,19 +56,11 @@ func Consumer() {
 	noStop := make(chan bool)
 
 	go func() {
-		for delivery := range chDelivery {
-
-			//DESERIALIZADORA
-			var comensal_dese models.Deserialized
-			buf := bytes.NewBuffer(delivery.Body)
-			decoder := json.NewDecoder(buf)
-			err_decode := decoder.Decode(&comensal_dese)
-			if err_decode != nil {
-				log.Fatal(err_decode)
-			}
-			register.RegisterBasicData_Service(comensal_dese)
+		for d := range msgs {
+			fmt.Printf("Recieved Message: %s\n", d.Body)
 		}
 	}()
 
 	<-noStop
+
 }
