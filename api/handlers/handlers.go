@@ -6,10 +6,10 @@ import (
 	"net/http"
 	"os"
 
-	models "github.com/Aphofisis/po-comensal-servicio-informacion_completa/models"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/rs/cors"
+	"github.com/streadway/amqp"
 )
 
 func Manejadores() {
@@ -41,26 +41,27 @@ func index(c echo.Context) error {
 
 func Consumer() {
 
-	ch, error_conection := models.MqttCN.Channel()
-	if error_conection != nil {
-		log.Fatal(error_conection)
+	conn, error_connec_mqtt := amqp.Dial("amqp://edwardlopez:servermqtt@165.227.69.88:8888/")
+	if error_connec_mqtt != nil {
+		defer conn.Close()
+		log.Fatal(error_connec_mqtt)
 	}
 
-	defer ch.Close()
+	ch, error_conection := conn.Channel()
+	if error_conection != nil {
+		defer ch.Close()
+		log.Fatal(error_conection)
+	}
 
 	msgs, err_consume := ch.Consume("comensal/basicdata", "", true, false, false, false, nil)
 	if err_consume != nil {
 		log.Fatal(err_consume)
 	}
 
-	noStop := make(chan bool)
-
 	go func() {
 		for d := range msgs {
 			fmt.Printf("Recieved Message: %s\n", d.Body)
 		}
 	}()
-
-	<-noStop
 
 }
