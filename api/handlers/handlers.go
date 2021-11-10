@@ -22,6 +22,8 @@ func Manejadores() {
 
 	e.GET("/", index)
 
+	go Consumer()
+
 	//Abrimos el puerto
 	PORT := os.Getenv("PORT")
 	//Si dice que existe PORT

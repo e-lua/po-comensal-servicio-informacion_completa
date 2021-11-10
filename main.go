@@ -9,6 +9,4 @@ func main() {
 	//HANDLER
 	handler.Manejadores()
 
-	go handler.Consumer()
-
 }
