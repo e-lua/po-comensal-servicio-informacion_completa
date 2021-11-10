@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/Aphofisis/po-comensal-servicio-informacion_completa/models"
+	registro "github.com/Aphofisis/po-comensal-servicio-informacion_completa/services/flujo_de_informacion/registro_basico_de_CS001"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/rs/cors"
@@ -47,12 +48,12 @@ func Consumer() {
 	ch, error_conection := models.MqttCN.Channel()
 	if error_conection != nil {
 		defer ch.Close()
-		log.Fatal("EEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRRRRRRRR11111111111111111")
+		log.Fatal("Error connection canal")
 	}
 
 	msgs, err_consume := ch.Consume("comensal/basicdata", "", true, false, false, false, nil)
 	if err_consume != nil {
-		log.Fatal("EEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRRRRRRRR2222222222222222222222")
+		log.Fatal("Error connection cola")
 	}
 
 	noStop := make(chan bool)
@@ -63,10 +64,9 @@ func Consumer() {
 			decoder := json.NewDecoder(buf)
 			err_consume := decoder.Decode(&comensal)
 			if err_consume != nil {
-				log.Fatal("EEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRRRRRRRR3333333333333")
+				log.Fatal("Error decoding")
 			}
-			log.Println("NNNNNNNNNNAAAAAAAMMMMME" + comensal.Name)
-
+			registro.RegisterFrom_CS001.RegisterBasicData(comensal)
 		}
 	}()
 
