@@ -1,15 +1,16 @@
 package api
 
 import (
-	"fmt"
+	"bytes"
+	"encoding/json"
 	"log"
 	"net/http"
 	"os"
 
+	"github.com/Aphofisis/po-comensal-servicio-informacion_completa/models"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/rs/cors"
-	"github.com/streadway/amqp"
 )
 
 func Manejadores() {
@@ -41,33 +42,29 @@ func index(c echo.Context) error {
 
 func Consumer() {
 
-	conn, error_connec_mqtt := amqp.Dial("amqp://edwardlopez:servermqtt@165.227.69.88:8888/")
-	if error_connec_mqtt != nil {
-		defer conn.Close()
-		log.Fatal(error_connec_mqtt)
-	}
-
-	ch, error_conection := conn.Channel()
+	ch, error_conection := models.MqttCN.Channel()
 	if error_conection != nil {
 		defer ch.Close()
-		log.Fatal(error_conection)
+		log.Fatal("EEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRRRRRRRR11111111111111111")
 	}
 
-	queue, err := ch.QueueDeclare("comensal/basicdata", true, false, false, false, nil)
-	if err != nil {
-		defer ch.Close()
-		log.Fatal(err)
-	}
-
-	msgs, err_consume := ch.Consume(queue.Name, "", true, false, false, false, nil)
+	msgs, err_consume := ch.Consume("comensal/basicdata", "", true, false, false, false, nil)
 	if err_consume != nil {
-		log.Fatal(err_consume)
+		log.Fatal("EEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRRRRRRRR2222222222222222222222")
 	}
 
 	noStop := make(chan bool)
 	go func() {
 		for d := range msgs {
-			fmt.Printf("Recieved Message: %s\n", d.Body)
+			var comensal models.Deserialized
+			buf := bytes.NewBuffer(d.Body)
+			decoder := json.NewDecoder(buf)
+			err_consume := decoder.Decode(&comensal)
+			if err_consume != nil {
+				log.Fatal("EEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRRRRRRRR3333333333333")
+			}
+			log.Println("NNNNNNNNNNAAAAAAAMMMMME" + comensal.Name)
+
 		}
 	}()
 
