@@ -31,6 +31,7 @@ func RegisterBasicData_Service(input_comensal models.Deserialized) error {
 	comensal.LastName = input_comensal.LastName
 	comensal.CreatedDate = input_comensal.UpdatedDate
 	comensal.UpdatedDate = input_comensal.UpdatedDate
+	comensal.Phone = input_comensal.Phone
 
 	error_add := comensal_repository.Pg_Add_BasicData(comensal)
 

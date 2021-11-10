@@ -7,7 +7,7 @@ import (
 func Pg_Add_BasicData(comensalpg models.Pg_Comensal) error {
 
 	db := models.Conectar_Pg_DB()
-	q := "INSERT INTO Comensal(idcountry,name,lastname,phone, createddate,updateddate) VALUES ($1,$2,$3,$4,$5,$6)"
+	q := "INSERT INTO Comensal(idcountry,name,lastname,phone,createddate,updateddate) VALUES ($1,$2,$3,$4,$5,$6)"
 	add_checker, err_add := db.Prepare(q)
 
 	if err_add != nil {
