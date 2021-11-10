@@ -53,15 +53,23 @@ func Consumer() {
 		log.Fatal(error_conection)
 	}
 
-	msgs, err_consume := ch.Consume("comensal/basicdata", "", true, false, false, false, nil)
+	queue, err := ch.QueueDeclare("comensal/basicdata", true, false, false, false, nil)
+	if err != nil {
+		defer ch.Close()
+		log.Fatal(err)
+	}
+
+	msgs, err_consume := ch.Consume(queue.Name, "", true, false, false, false, nil)
 	if err_consume != nil {
 		log.Fatal(err_consume)
 	}
 
+	noStop := make(chan bool)
 	go func() {
 		for d := range msgs {
 			fmt.Printf("Recieved Message: %s\n", d.Body)
 		}
 	}()
 
+	<-noStop
 }
