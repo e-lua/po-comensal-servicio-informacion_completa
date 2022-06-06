@@ -24,6 +24,8 @@ services:
       - POSTGRES_USER=postgres2
       - POSTGRES_PASSWORD=postgres2
       - POSTGRES_DB=postgres2
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
   pgadmin:
     restart: always
     image: "dpage/pgadmin4"
@@ -38,7 +40,8 @@ services:
       - postgres
 networks:
   backend:
-
+volumes:
+  pgdata:
 
 
 
